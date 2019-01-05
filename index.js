@@ -10,14 +10,7 @@ consumer.init();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.post('/signup', function(req, res) {
-    var username = req.body.username;
-    var password = req.body.password;
-    console.log("post received: %s %s", username, password);
-});
-
 app.post('/echoAtTime', function (req, res) {
-    console.log("req.body", req.body);
     producer.echoAtTime(req.body.time,req.body.message);
     res.end();
  })

@@ -2,6 +2,7 @@ var redis = require('redis');
 var client = redis.createClient();
 var hash = "timestampsHash";
 var timestampsSet = "timestampsSet";
+var withScores = "WITHSCORES";
 
 client.on('connect', function() {
     console.log('Redis client connected');
@@ -12,17 +13,18 @@ client.on('error', function (err) {
 });
 
 module.exports = {
-    put: async function(key, value){        
+    get: function(cb){    
+        let reply;    
+        client.zrevrange(timestampsSet, 0 ,0, withScores , cb
+    );
+        
+    },
+    put: function(key, value){        
         client.zadd(timestampsSet, key, value);
-    }
-}
-
-module.exports = {
-    get: async function(key){        
-        client.zrevrange(timestampsSet, 0 ,0, function(err, replies){
-            console.log("replies", replies[0]);
-        });
-        return replies[0];
+    },
+    deleteMax: function(){
+        // client.zrem(key);
+        client.zremrangebyrank(timestampsSet,0,0);
     }
 }
 
