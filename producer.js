@@ -1,20 +1,18 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var producer = require('./service/producer')
-var consumer = require('./service/consumer')
+var producerService = require('./service/producerService')
 
-consumer.init();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.post('/echoAtTime', function (req, res) {
-    producer.echoAtTime(req.body.time,req.body.message);
+    producerService.echoAtTime(req.body.time,req.body.message);
     res.end();
  })
 
 
- var server = app.listen(8082, function () {
+ var server = app.listen(8083, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("App listening at http://%s:%s", host, port)
