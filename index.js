@@ -1,11 +1,9 @@
 var express = require('express');
 var app = express();
-var redisDemo = require('./redisDemo');
 var bodyParser = require('body-parser');
 var producer = require('./service/producer')
 var consumer = require('./service/consumer')
 
-redisDemo.initRedis();
 consumer.init();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
