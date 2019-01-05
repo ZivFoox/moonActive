@@ -1,8 +1,6 @@
 var redis = require('redis');
 var client = redis.createClient();
 var hash = "timestampsHash";
-var timestampsSet = "timestampsSet";
-var withScores = "WITHSCORES";
 
 client.on('connect', function() {
     console.log('Redis client connected');
