@@ -13,18 +13,44 @@ client.on('error', function (err) {
 });
 
 module.exports = {
-    get: function(cb){    
-        let reply;    
-        client.zrevrange(timestampsSet, 0 ,0, withScores , cb
-    );
+    get: function(time) {
+        return new Promise(resolve => {
+            client.hget(hash, time, function(err, result){
+                if(err){
+                    console.log(err);
+                }
+                resolve(result);
+            })
+        });
+      },
+    put: function(time, message){
+        client.hexists(hash, time, function(err, isExist){
+            if(isExist){
+                client.hget(hash, time, function (err, res) {
+                    let concatnatedRes = res + "," + message;
+                    client.hmset(hash, time, concatnatedRes);
+                });
+            }
+            else{
+                client.hmset(hash, time, message);
+            }
+        })
         
     },
-    put: function(key, value){        
-        client.zadd(timestampsSet, key, value);
+    delete: function(time){
+        client.hdel(hash, time);
     },
-    deleteMax: function(){
-        // client.zrem(key);
-        client.zremrangebyrank(timestampsSet,0,0);
-    }
+    getAll: function(time) {
+        return new Promise(resolve => {
+            client.hgetall(hash, function(err, result){
+                if(result){
+                    resolve(Object.keys(result));
+                }
+                else{
+                    resolve([]);
+                }
+                });
+            })
+        }
+      
 }
-
